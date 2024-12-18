@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2 
+      uses: actions/checkout@v2
 
     - name: Set up Git Identity
       run: |
@@ -38,7 +38,7 @@ jobs:
         rm -rf .repo
 
     - name: Initialize repo
-      env: 
+      env:
         PATH: ${{ github.workspace }}/bin:$PATH
       run: |
         mkdir -p .repo/manifests
@@ -50,7 +50,7 @@ jobs:
         repo sync
         repo prune
 
-    - name: Clean up runner logs  # <-- Paso para limpiar los logs
+    - name: Clean up runner logs
       run: |
         sudo rm -rf /home/runner/runners/2.321.0/_diag/*
 
