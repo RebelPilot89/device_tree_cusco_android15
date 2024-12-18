@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2 
 
     - name: Set up Git Identity
       run: |
@@ -20,6 +20,14 @@ jobs:
       with:
         java-version: 1.8
 
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.ccache
+        key: ${{ runner.os }}-build-${{ hashFiles('**/Makefile') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
+
     - name: Install Dependencies
       run: |
         sudo apt-get update -qq
@@ -30,17 +38,21 @@ jobs:
         rm -rf .repo
 
     - name: Initialize repo
+      env: 
+        PATH: ${{ home }}/bin:$PATH
       run: |
         mkdir -p .repo/manifests
         curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
         mkdir -p ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
-        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
-        source $GITHUB_ENV
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
         repo sync
         repo prune
+
+    - name: Clean up runner logs  # <-- Paso para limpiar los logs
+      run: |
+        sudo rm -rf /home/runner/runners/2.321.0/_diag/*
 
     - name: Setup Device and Common Trees
       run: |
