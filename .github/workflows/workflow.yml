@@ -32,6 +32,10 @@ jobs:
         chmod a+x ~/bin/repo
         export PATH=~/bin:$PATH
 
+    - name: Clean repo directory 
+      run: |
+        rm -rf .repo
+
     - name: Initialize repo
       run: |
         mkdir -p .repo/manifests
