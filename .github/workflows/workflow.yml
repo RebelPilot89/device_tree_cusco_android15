@@ -1,57 +1,155 @@
 name: TWRP Build
 
+
+
 on: [push]
 
+
+
 jobs:
-  build:
-    runs-on: ubuntu-22.04
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+  build:
 
-    - name: Set up Git Identity
-      run: |
-        git config --global user.name "RebelPilot89"
-        git config --global user.email "marcocrush@gmail.com"
+    runs-on: ubuntu-22.04
 
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
 
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update -qq
-        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncursesw5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev coreutils
 
-    - name: Clean repo directory
-      run: |
-        rm -rf .repo
+    steps:
 
-    - name: Initialize repo
-      env:
-        PATH: ${{ github.workspace }}/bin:$PATH
-      run: |
-        mkdir -p .repo/manifests
-        curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
-        mkdir -p ~/bin
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-        chmod a+x ~/bin/repo
-        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
-        repo sync
-        repo prune
+    - name: Clean disk before starting
 
-    - name: Clean up runner logs
-      run: |
-        sudo rm -rf /home/runner/runners/2.321.0/_diag/*
+      run: |
 
-    - name: Setup Device and Common Trees
-      run: |
-        git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
+        sudo apt-get clean
 
-    - name: Build TWRP
-      run: |
-        source build/envsetup.sh
-        lunch omni_cusco-eng
-        mka recoveryimage
+        sudo apt-get autoclean
+
+        sudo apt-get autoremove -y
+
+        sudo rm -rf /var/cache/*
+
+        sudo rm -rf /tmp/*
+
+        sudo rm -rf /home/runner/work/*
+
+
+
+    - name: Checkout repository
+
+      uses: actions/checkout@v3  # Asegúrate de usar la versión correcta
+
+
+
+    - name: Set up Git Identity
+
+      run: |
+
+        git config --global user.name "RebelPilot89"
+
+        git config --global user.email "marcocrush@gmail.com"
+
+
+
+    - name: Set up JDK 1.8
+
+      uses: actions/setup-java@v1
+
+      with:
+
+        java-version: 1.8
+
+
+
+    - name: Install Dependencies
+
+      run: |
+
+        sudo apt-get update -qq
+
+        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncursesw5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev
+
+
+
+    - name: Clean repo directory
+
+      run: |
+
+        rm -rf .repo
+
+        sudo rm -rf /var/cache/*
+
+        sudo rm -rf /tmp/*
+
+
+
+    - name: Initialize repo
+
+      run: |
+
+        mkdir -p .repo/manifests
+
+        curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
+
+        mkdir -p ~/bin
+
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+
+        chmod a+x ~/bin/repo
+
+        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
+
+        source $GITHUB_ENV
+
+        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+
+        repo sync
+
+        repo prune
+
+
+
+    - name: Free up space after repo sync
+
+      run: |
+
+        sudo rm -rf /var/cache/*
+
+        sudo rm -rf /tmp/*
+
+
+
+    - name: Setup Device and Common Trees
+
+      run: |
+
+        git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
+
+        # Agrega aquí cualquier otra dependencia común que necesites
+
+
+
+    - name: Free up space after device tree setup
+
+      run: |
+
+        sudo rm -rf /var/cache/*
+
+        sudo rm -rf /tmp/*
+
+        sudo rm -rf ~/.ccache/*
+
+        sudo rm -rf ~/out/*
+
+
+
+    - name: Build TWRP
+
+      run: |
+
+        source build/envsetup.sh
+
+        lunch omni_cusco-eng
+
+        mka recoveryimage
+
+
