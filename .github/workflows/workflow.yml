@@ -7,8 +7,17 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout repository  # ¡No elimines esta línea!
-      uses: actions/checkout@v2  # O actions/checkout@v3
+    - name: Clean disk before starting
+      run: |
+        sudo apt-get clean
+        sudo apt-get autoclean
+        sudo apt-get autoremove -y
+        sudo rm -rf /var/cache/*
+        sudo rm -rf /tmp/*
+        sudo rm -rf /home/runner/work/*
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Set up Git Identity
       run: |
@@ -28,24 +37,38 @@ jobs:
     - name: Clean repo directory
       run: |
         rm -rf .repo
+        sudo rm -rf /var/cache/*
+        sudo rm -rf /tmp/*
 
     - name: Initialize repo
-      env:
-        PATH: ${{ home }}/bin:$PATH
-        
       run: |
         mkdir -p .repo/manifests
         curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
         mkdir -p ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
+        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
+        source $GITHUB_ENV
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
         repo sync
         repo prune
 
+    - name: Free up space after repo sync
+      run: |
+        sudo rm -rf /var/cache/*
+        sudo rm -rf /tmp/*
+
     - name: Setup Device and Common Trees
       run: |
         git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
+        # Agrega aquí cualquier otra dependencia común que necesites
+
+    - name: Free up space after device tree setup
+      run: |
+        sudo rm -rf /var/cache/*
+        sudo rm -rf /tmp/*
+        sudo rm -rf ~/.ccache/*
+        sudo rm -rf ~/out/*
 
     - name: Build TWRP
       run: |
