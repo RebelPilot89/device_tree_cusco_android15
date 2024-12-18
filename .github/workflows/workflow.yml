@@ -7,15 +7,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Clean disk before starting
-      run: |
-        sudo apt-get clean
-        sudo apt-get autoclean
-        sudo apt-get autoremove -y
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
-        sudo rm -rf /home/runner/work/*
-
     - name: Checkout repository
       uses: actions/checkout@v3
 
@@ -37,8 +28,6 @@ jobs:
     - name: Clean repo directory
       run: |
         rm -rf .repo
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
 
     - name: Initialize repo
       run: |
@@ -53,22 +42,9 @@ jobs:
         repo sync
         repo prune
 
-    - name: Free up space after repo sync
-      run: |
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
-
     - name: Setup Device and Common Trees
       run: |
         git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
-        # Agrega aquí cualquier otra dependencia común que necesites
-
-    - name: Free up space after device tree setup
-      run: |
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
-        sudo rm -rf ~/.ccache/*
-        sudo rm -rf ~/out/*
 
     - name: Build TWRP
       run: |
