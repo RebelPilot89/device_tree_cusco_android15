@@ -17,7 +17,7 @@ jobs:
         sudo rm -rf /home/runner/work/*
 
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Asegúrate de usar la versión correcta
 
     - name: Set up Git Identity
       run: |
@@ -47,7 +47,8 @@ jobs:
         mkdir -p ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
-        export PATH=~/bin:$PATH
+        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
+        source $GITHUB_ENV
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
         repo sync
         repo prune
