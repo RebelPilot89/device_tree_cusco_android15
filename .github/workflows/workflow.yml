@@ -31,7 +31,8 @@ jobs:
 
     - name: Initialize repo
       env:
-        PATH: ${{ home/bin }}:$PATH
+        PATH: ${{ home }}/bin:$PATH
+        
       run: |
         mkdir -p .repo/manifests
         curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
