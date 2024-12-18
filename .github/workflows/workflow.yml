@@ -4,20 +4,11 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04  # Usar una máquina virtual con más espacio
 
     steps:
-    - name: Clean disk before starting
-      run: |
-        sudo apt-get clean
-        sudo apt-get autoclean
-        sudo apt-get autoremove -y
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
-        sudo rm -rf /home/runner/work/*
-
     - name: Checkout repository
-      uses: actions/checkout@v3  # Asegúrate de usar la versión correcta
+      uses: actions/checkout@v2
 
     - name: Set up Git Identity
       run: |
@@ -37,38 +28,24 @@ jobs:
     - name: Clean repo directory
       run: |
         rm -rf .repo
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
 
     - name: Initialize repo
       run: |
         mkdir -p .repo/manifests
         curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
+        # Instalar repo y configurar PATH en el mismo paso
         mkdir -p ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
-        echo 'export PATH=$HOME/bin:$PATH' >> $GITHUB_ENV
-        source $GITHUB_ENV
+        export PATH=~/bin:$PATH
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
         repo sync
-        repo prune
-
-    - name: Free up space after repo sync
-      run: |
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
+        repo prune  # Eliminar ramas innecesarias
 
     - name: Setup Device and Common Trees
       run: |
         git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
         # Agrega aquí cualquier otra dependencia común que necesites
-
-    - name: Free up space after device tree setup
-      run: |
-        sudo rm -rf /var/cache/*
-        sudo rm -rf /tmp/*
-        sudo rm -rf ~/.ccache/*
-        sudo rm -rf ~/out/*
 
     - name: Build TWRP
       run: |
