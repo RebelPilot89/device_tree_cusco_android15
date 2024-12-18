@@ -36,9 +36,13 @@ jobs:
       run: |
         mkdir -p .repo/manifests
         git clone https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git .repo/manifests
+        mkdir -p ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        export PATH=~/bin:$PATH
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
-        repo sync
-
+        repo sync   
+   
     - name: Setup Device and Common Trees
       run: |
         git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
