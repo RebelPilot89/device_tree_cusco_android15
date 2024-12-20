@@ -6,9 +6,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/omni_cusco.mk
-
-COMMON_LUNCH_CHOICES := \
-    omni_cusco-user \
-    omni_cusco-userdebug \
-    omni_cusco-eng
+    $(LOCAL_DIR)/twrp_cusco.mk
