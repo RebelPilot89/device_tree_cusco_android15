@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# Copyright (C) 2016 The CyanogenMod Project
-# Copyright (C) 2017-2020 The LineageOS Project
+# Copyright (C) 2024 The TWRP Personal Proyect
+# Copyright (C) 2024 The Meridian Project
 #
-# SPDX-License-Identifier: Apache-2.0
+#  Apache-2.0
 #
 
 set -e
 
-DEVICE=msi
+DEVICE=cusco
 VENDOR=motorola
 
 # Load extract_utils and do some sanity checks
@@ -33,18 +33,17 @@ SECTION=
 while [ "${#}" -gt 0 ]; do
     case "${1}" in
         -n | --no-cleanup )
-                CLEAN_VENDOR=false
-                ;;
+            CLEAN_VENDOR=false
+            ;;
         -k | --kang )
-                KANG="--kang"
-                ;;
+            KANG="--kang"
+            ;;
         -s | --section )
-                SECTION="${2}"; shift
-                CLEAN_VENDOR=false
-                ;;
+            SECTION="${1}"; shift
+            ;;
         * )
-                SRC="${1}"
-                ;;
+            SRC="${1}"
+            ;;
     esac
     shift
 done
