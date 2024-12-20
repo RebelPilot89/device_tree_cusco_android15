@@ -8,7 +8,7 @@
 
 set -e
 
-DEVICE=cusco
+DEVICE=msi
 VENDOR=motorola
 
 # Load extract_utils and do some sanity checks
