@@ -1,12 +1,10 @@
 #!/bin/bash
 #
-# Copyright (C) 2024 The TWRP Personal Proyect
+# Copyright (C) 2024 The TWRP Personal Project
 # Copyright (C) 2024 The Meridian Project
 #
-#  Apache-2.0
+# Licensed under the Apache License, Version 2.0 (the "License");
 #
-#!/bin/bash
-
 # Salir en caso de error
 set -e
 
@@ -25,33 +23,31 @@ VENDOR_MNT=/mnt/vendor
 PRODUCT_MNT=/mnt/product
 ODM_MNT=/mnt/odm
 
+# Archivo de lista de archivos propietarios
+PROP_FILES="proprietary-files.txt"
+
+# Verificar que el archivo proprietary-files.txt existe
+if [ ! -f "$PROP_FILES" ]; then
+  echo "Archivo $PROP_FILES no encontrado!"
+  exit 1
+fi
+
+# Verificar que las imágenes existen
+for img in system.img vendor.img product.img odm.img; do
+  if [ ! -f "$OTA_DIR/$img" ]; then
+    echo "Imagen $img no encontrada en $OTA_DIR!"
+    exit 1
+  fi
+done
+
 # Montar las particiones al principio
 echo "Montando particiones..."
 sudo mkdir -p "$SYSTEM_MNT" "$VENDOR_MNT" "$PRODUCT_MNT" "$ODM_MNT"
 
 sudo mount -o loop,ro "$OTA_DIR/system.img" "$SYSTEM_MNT"
-if [ $? -ne 0 ]; then
-  echo "Error al montar system.img en $SYSTEM_MNT"
-  exit 1
-fi
-
 sudo mount -o loop,ro "$OTA_DIR/vendor.img" "$VENDOR_MNT"
-if [ $? -ne 0 ]; then
-  echo "Error al montar vendor.img en $VENDOR_MNT"
-  exit 1
-fi
-
 sudo mount -o loop,ro "$OTA_DIR/product.img" "$PRODUCT_MNT"
-if [ $? -ne 0 ]; then
-  echo "Error al montar product.img en $PRODUCT_MNT"
-  exit 1
-fi
-
 sudo mount -o loop,ro "$OTA_DIR/odm.img" "$ODM_MNT"
-if [ $? -ne 0 ]; then
-  echo "Error al montar odm.img en $ODM_MNT"
-  exit 1
-fi
 
 echo "Particiones montadas correctamente."
 
@@ -105,6 +101,6 @@ trap "sudo umount '$SYSTEM_MNT' '$VENDOR_MNT' '$PRODUCT_MNT' '$ODM_MNT'" EXIT
 # Extraer archivos listados en proprietary-files.txt
 while IFS=":" read -r SOURCE_PARTITION SOURCE_PATH DEST_PATH; do
   extract_file "$SOURCE_PARTITION" "$SOURCE_PATH" "$DEST_PATH"
-done < proprietary-files.txt
+done < "$PROP_FILES"
 
 echo "Extracción de archivos completada."
