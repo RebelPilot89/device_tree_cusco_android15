@@ -5,97 +5,106 @@
 #
 #  Apache-2.0
 #
-
 #!/bin/bash
 
+# Salir en caso de error
 set -e
 
-DEVICE=cusco
-VENDOR=motorola
+# Directorio donde se encuentra el dump de firmware (ajusta la ruta si es necesario)
+OTA_DIR=~/moto
 
-# Load extract_utils and do some sanity checks
-MY_DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "${MY_DIR}" ]]; then MY_DIR="${PWD}"; fi
+# Directorios de salida para cada partición (ajusta las rutas si es necesario)
+SYSTEM_PATH=../../../vendor/motorola/cusco/proprietary/system
+VENDOR_PATH=../../../vendor/motorola/cusco/proprietary/vendor
+PRODUCT_PATH=../../../vendor/motorola/cusco/proprietary/product
+ODM_PATH=../../../vendor/motorola/cusco/proprietary/odm
 
-ANDROID_ROOT="${MY_DIR}/../../.."
+# Puntos de montaje para cada partición (ajusta las rutas si es necesario)
+SYSTEM_MNT=/mnt/system
+VENDOR_MNT=/mnt/vendor
+PRODUCT_MNT=/mnt/product
+ODM_MNT=/mnt/odm
 
-HELPER="${ANDROID_ROOT}/tools/extract-utils/extract_utils.sh"
-if [ ! -f "${HELPER}" ]; then
-    echo "Unable to find helper script at ${HELPER}"
+# Montar las particiones al principio
+echo "Montando particiones..."
+sudo mkdir -p "$SYSTEM_MNT" "$VENDOR_MNT" "$PRODUCT_MNT" "$ODM_MNT"
+
+sudo mount -o loop,ro "$OTA_DIR/system.img" "$SYSTEM_MNT"
+if [ $? -ne 0 ]; then
+  echo "Error al montar system.img en $SYSTEM_MNT"
+  exit 1
+fi
+
+sudo mount -o loop,ro "$OTA_DIR/vendor.img" "$VENDOR_MNT"
+if [ $? -ne 0 ]; then
+  echo "Error al montar vendor.img en $VENDOR_MNT"
+  exit 1
+fi
+
+sudo mount -o loop,ro "$OTA_DIR/product.img" "$PRODUCT_MNT"
+if [ $? -ne 0 ]; then
+  echo "Error al montar product.img en $PRODUCT_MNT"
+  exit 1
+fi
+
+sudo mount -o loop,ro "$OTA_DIR/odm.img" "$ODM_MNT"
+if [ $? -ne 0 ]; then
+  echo "Error al montar odm.img en $ODM_MNT"
+  exit 1
+fi
+
+echo "Particiones montadas correctamente."
+
+# Función para extraer archivos
+extract_file() {
+  local SOURCE_PARTITION=$1
+  local SOURCE_PATH=$2
+  local DEST_PATH=$3
+
+  echo "Extrayendo $SOURCE_PATH de $SOURCE_PARTITION a $DEST_PATH"
+
+  # Seleccionar la partición de origen y la ruta de destino
+  case "$SOURCE_PARTITION" in
+    system)
+      SOURCE_MNT="$SYSTEM_MNT"
+      DEST_DIR="$SYSTEM_PATH"
+      ;;
+    vendor)
+      SOURCE_MNT="$VENDOR_MNT"
+      DEST_DIR="$VENDOR_PATH"
+      ;;
+    product)
+      SOURCE_MNT="$PRODUCT_MNT"
+      DEST_DIR="$PRODUCT_PATH"
+      ;;
+    odm)
+      SOURCE_MNT="$ODM_MNT"
+      DEST_DIR="$ODM_PATH"
+      ;;
+    *)
+      echo "Error: Partición de origen desconocida: $SOURCE_PARTITION"
+      exit 1
+      ;;
+  esac
+
+  # Crear el directorio de destino si no existe
+  mkdir -p "$DEST_DIR/$DEST_PATH"
+
+  # Copiar el archivo
+  sudo cp -f "$SOURCE_MNT/$SOURCE_PATH" "$DEST_DIR/$DEST_PATH"
+
+  if [ $? -ne 0 ]; then
+    echo "Error al extraer $SOURCE_PATH"
     exit 1
-fi
-source "${HELPER}"
-
-# Default to sanitizing the vendor folder before extraction
-CLEAN_VENDOR=true
-
-KANG=
-SECTION=
-
-while [ "${#}" -gt 0 ]; do
-    case "${1}" in
-        -n | --no-cleanup )
-            CLEAN_VENDOR=false
-            ;;
-        -k | --kang )
-            KANG="--kang"
-            ;;
-        -s | --section )
-            SECTION="${1}"; shift
-            ;;
-        * )
-            SRC="${1}"
-            ;;
-    esac
-    shift
-done
-
-if [ -z "${SRC}" ]; then
-    SRC="adb"
-fi
-
-# Initialize the helper
-setup_vendor "${DEVICE}" "${VENDOR}" "${ANDROID_ROOT}" false "${CLEAN_VENDOR}"
-
-# Extract the proprietary files
-extract "${MY_DIR}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
-
-# Mount the partitions
-mount /dev/block/bootdevice/by-name/system /mnt/system
-mount /dev/block/bootdevice/by-name/vendor /mnt/vendor
-mount /dev/block/bootdevice/by-name/product /mnt/product
-mount /dev/block/bootdevice/by-name/odm /mnt/odm
-
-# Define the destination paths
-TARGET_COPY_OUT_SYSTEM="/system"
-TARGET_COPY_OUT_VENDOR="/vendor"
-TARGET_COPY_OUT_PRODUCT="/product"
-TARGET_COPY_OUT_ODM="/odm"
-
-# Function to copy files to their respective destinations
-function extract_files() {
-    local SRC=$1
-    local DST=$2
-    if [ -d "$SRC" ]; then
-        cp -r $SRC/* $DST/
-    else
-        echo "Directory $SRC not found."
-    fi
+  fi
 }
 
-# Extract files from the mounted partitions
-extract_files "/mnt/system" "$TARGET_COPY_OUT_SYSTEM"
-extract_files "/mnt/vendor" "$TARGET_COPY_OUT_VENDOR"
-extract_files "/mnt/product" "$TARGET_COPY_OUT_PRODUCT"
-extract_files "/mnt/odm" "$TARGET_COPY_OUT_ODM"
+# Desmontar particiones al final, incluso si hay errores
+trap "sudo umount '$SYSTEM_MNT' '$VENDOR_MNT' '$PRODUCT_MNT' '$ODM_MNT'" EXIT
 
-# Unmount the partitions
-umount /mnt/system
-umount /mnt/vendor
-umount /mnt/product
-umount /mnt/odm
+# Extraer archivos listados en proprietary-files.txt
+while IFS=":" read -r SOURCE_PARTITION SOURCE_PATH DEST_PATH; do
+  extract_file "$SOURCE_PARTITION" "$SOURCE_PATH" "$DEST_PATH"
+done < proprietary-files.txt
 
-# Run the setup makefiles script
-"${MY_DIR}/setup-makefiles.sh"
-
-echo "Extraction complete."
+echo "Extracción de archivos completada."
