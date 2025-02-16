@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # Usar una máquina virtual con más espacio
+    runs-on: self-hosted  # Usar un self-hosted runner en lugar de una máquina virtual
 
     steps:
     - name: Checkout repository
