@@ -38,8 +38,8 @@ jobs:
         chmod a+x ~/bin/repo
         export PATH=~/bin:$PATH
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-14
-        repo sync
-        repo prune
+        repo sync -j1 >> repo_sync.log 2>&1
+        repo prune >> repo_prune.log 2>&1
 
     - name: Setup Device and Common Trees
       run: |
@@ -49,4 +49,4 @@ jobs:
       run: |
         source build/envsetup.sh
         lunch omni_cusco-eng
-        mka recoveryimage
+        mka recoveryimage >> build.log 2>&1
