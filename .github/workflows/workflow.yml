@@ -23,7 +23,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncursesw5-dev libsdl1.2-dev libssl-dev libxml2 utils
+        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncursesw5-dev libsdl1.2-dev libssl-dev libxml2
 
     - name: Clean repo directory
       run: |
