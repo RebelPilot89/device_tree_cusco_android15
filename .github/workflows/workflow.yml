@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: self-hosted  # Usar un self-hosted runner en lugar de una máquina virtual
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repository
@@ -33,19 +33,17 @@ jobs:
       run: |
         mkdir -p .repo/manifests
         curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
-        # Instalar repo y configurar PATH en el mismo paso
         mkdir -p ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
         export PATH=~/bin:$PATH
         repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
-        repo sync -j1 --fail-fast  # Use fewer jobs and fail fast on errors
-        repo prune  # Eliminar ramas innecesarias
+        repo sync -j1 --fail-fast
+        repo prune
 
     - name: Setup Device and Common Trees
       run: |
         git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
-        # Agrega aquí cualquier otra dependencia común que necesites
 
     - name: Build TWRP
       run: |
