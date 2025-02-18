@@ -23,22 +23,41 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncursesw5-dev libsdl1.2-dev libssl-dev libxml2 utils
+        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncurseswThe issue seems to be with the branch naming. The branches exist5-dev libsdl1.2-dev libssl-dev libxml2 utils
 
     - name: Clean repo directory
       run: |
-        rm -rf .repo
+        rm - but are named `android-14.1` instead of `android-14rf .repo
 
     - name: Initialize repo
-      run: |
+      run:`. To fix this, you need to update the branch reference in |
         mkdir -p .repo/manifests
-        curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/android-14.1/default.xml
+        curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/min the `repo init` command.
+
+Here is the updated workflow fileimal-manifest-twrp/platform_manifest_twrp_aosp/android-14.1/default.xml
         mkdir -p ~/bin
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+:
+
+```yaml
+name: TWRP Build
+
+on: [push]
+
+jobs:
+        curl https://storage.googleapis.com/git-repo  build:
+    runs-on: self-hosted
+
+    steps:
+    --downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
         export PATH=~/bin:$PATH
-        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b android-14.1
-        repo sync -j1 --verbose >> repo_sync.log 2>&1
+        repo init -u name: Checkout repository
+      uses: actions/checkout@ https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aospv2
+
+    - name: Set up Git Identity
+      run: |
+       .git -b android-14.1
+        repo sync - git config --global user.name "RebelPilot89j1 --verbose >> repo_sync.log 2>&1
         repo prune >> repo_prune.log 2>&1
 
     - name: Setup Device and Common Trees
