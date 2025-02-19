@@ -6,6 +6,7 @@
 #
 
 LOCAL_PATH := device/motorola/cusco
+
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -33,3 +34,7 @@ PRODUCT_PACKAGES += \
     update_engine \
     update_verifier \
     update_engine_sideload
+
+# Copiar el archivo ui.xml al sistema
+PRODUCT_COPY_FILES += \
+    device/motorola/cusco/themes/ui.xml:system/etc/theme/ui.xml
