@@ -62,6 +62,6 @@ VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 12.1.0
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    PRIVATE_BUILD_DESC="TWRP for Cusco V1.0"
+    PRIVATE_BUILD_DESC="TWRP for Cusco V1.0"
 
 BUILD_FINGERPRINT := motorola/cusco/cusco:12/V1UUS35H.15-41-3/d5d29:user/release-keys  # Intenta encontrar el de Android 12 si es posible

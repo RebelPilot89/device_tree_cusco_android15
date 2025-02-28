@@ -1,0 +1,52 @@
+name: TWRP Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git Identity
+      run: |
+        git config --global user.name "RebelPilot89"
+        git config --global user.email "marcocrush@gmail.com"
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncursesw5-dev libsdl1.2-dev libssl-dev libxml2
+
+    - name: Clean repo directory
+      run: |
+        rm -rf .repo
+
+    - name: Initialize repo
+      run: |
+        mkdir -p .repo/manifests
+        curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/minimal-manifest-twrp/platform_manifest_twrp_aosp/twrp-12.1/default.xml
+        mkdir -p ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        export PATH=~/bin:$PATH
+        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+        repo sync -j1 --fail-fast
+        repo prune
+
+    - name: Setup Device and Common Trees
+      run: |
+        git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
+
+    - name: Build TWRP
+      run: |
+        source build/envsetup.sh
+        lunch omni_cusco-eng
+        mka recoveryimage

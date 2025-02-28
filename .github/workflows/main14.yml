@@ -1,0 +1,71 @@
+name: TWRP Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git Identity
+      run: |
+        git config --global user.name "RebelPilot89"
+        git config --global user.email "marcocrush@gmail.com"
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -qq -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick libncurses5-dev libncurseswThe issue seems to be with the branch naming. The branches exist5-dev libsdl1.2-dev libssl-dev libxml2 utils
+
+    - name: Clean repo directory
+      run: |
+        rm - but are named `android-14.1` instead of `android-14rf .repo
+
+    - name: Initialize repo
+      run:`. To fix this, you need to update the branch reference in |
+        mkdir -p .repo/manifests
+        curl -L -o .repo/manifests/default.xml https://raw.githubusercontent.com/min the `repo init` command.
+
+Here is the updated workflow fileimal-manifest-twrp/platform_manifest_twrp_aosp/android-14.1/default.xml
+        mkdir -p ~/bin
+:
+
+```yaml
+name: TWRP Build
+
+on: [push]
+
+jobs:
+        curl https://storage.googleapis.com/git-repo  build:
+    runs-on: self-hosted
+
+    steps:
+    --downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        export PATH=~/bin:$PATH
+        repo init -u name: Checkout repository
+      uses: actions/checkout@ https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aospv2
+
+    - name: Set up Git Identity
+      run: |
+       .git -b android-14.1
+        repo sync - git config --global user.name "RebelPilot89j1 --verbose >> repo_sync.log 2>&1
+        repo prune >> repo_prune.log 2>&1
+
+    - name: Setup Device and Common Trees
+      run: |
+        git clone https://github.com/RebelPilot89/device_tree_cusco_android15.git device/motorola/cusco
+
+    - name: Build TWRP
+      run: |
+        source build/envsetup.sh
+        lunch omni_cusco-eng
+        mka recoveryimage >> build.log 2>&1

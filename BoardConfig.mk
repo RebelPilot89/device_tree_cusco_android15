@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2024 The Android Open Source Project
 # Copyright (C) 2024 SebaUbuntu's TWRP device tree generator
 #
@@ -46,7 +45,7 @@ TARGET_NO_BOOTLOADER := true
 TARGET_USES_UEFI := true  # Verifica si el dispositivo usa UEFI
 
 # Pantalla
-TARGET_SCREEN_DENSITY := 393 # Asegúrate de que sea el DPI correcto
+TARGET_SCREEN_DENSITY := 393  # Asegúrate de que sea el DPI correcto
 TARGET_SCREEN_WIDTH := 1080
 TARGET_SCREEN_HEIGHT := 2400
 
@@ -72,7 +71,6 @@ BOARD_MKBOOTIMG_ARGS += --kernel_offset 0x00080000
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x01000000
 BOARD_MKBOOTIMG_ARGS += --tags_offset 0x00100000
 BOARD_MKBOOTIMG_ARGS += --ramdisk $(DEVICE_PATH)/prebuilt/ramdisk-new.img  # ¡Usamos el ramdisk modificado!
-
 
 # Kernel command line:
 BOARD_KERNEL_CMDLINE += video=vfb:640x400,bpp=32,memsize=3072000 printk.devkmsg=on firmware_class.path=/vendor/firmware_mnt/image bootconfig
@@ -100,8 +98,8 @@ BOARD_MOTOROLA_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext product ve
 BOARD_MOTOROLA_DYNAMIC_PARTITIONS_SIZE := 6663821312  # Verifica si este tamaño es correcto
 
 # Plataforma
-TARGET_BOARD_PLATFORM := sm6450    
-TARGET_BOARD_AUDIO_PLATFORM := parrot  
+TARGET_BOARD_PLATFORM := sm6450
+TARGET_BOARD_AUDIO_PLATFORM := parrot
 
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
