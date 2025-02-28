@@ -1,0 +1,42 @@
+vendor_boot.img
+Parsing boot image: [vendor_boot.img]
+VENDOR_BOOT_HDR
+HEADER_VER      [4]
+RAMDISK_SZ      [12426849]
+DTB_SZ          [387286]
+BOOTCONFIG_SZ   [85]
+PAGESIZE        [4096]
+NAME            []
+CMDLINE         [video=vfb:640x400,bpp=32,memsize=3072000 printk.devkmsg=on firmware_class.path=/vendor/firmware_mnt/image bootconfig]
+VND_RAMDISK     name=[] type=[platform] size=[12426849] fmt=[lz4_legacy]
+[boot/sign.rs:261] unexpected ASN.1 DER tag: expected SEQUENCE, got APPLICATION [1] (primitive)
+VBMETA
+
+rebelpilot89@Rebel:~/twrp_cusco/device/motorola/cusco/prebuilt/premagisk$ magiskboot unpack boot.img
+Parsing boot image: [boot.img]
+HEADER_VER      [4]
+KERNEL_SZ       [46850772]
+RAMDISK_SZ      [1380092]
+OS_VERSION      [12.0.0]
+OS_PATCH_LEVEL  [2024-11]
+PAGESIZE        [4096]
+CMDLINE         []
+KERNEL_FMT      [raw]
+RAMDISK_FMT     [lz4_legacy]
+[boot/sign.rs:261] unexpected ASN.1 DER tag: expected SEQUENCE, got APPLICATION [1] (primitive)
+VBMETA
+
+
+
+Parsing boot image: [vendor_boot.img]
+VENDOR_BOOT_HDR
+HEADER_VER     [4]            # Versión del encabezado (no lo usamos directamente en mkbootimg)
+RAMDISK_SZ     [12426849]   # Tamaño del ramdisk del proveedor (lo usaremos más adelante)
+DTB_SZ         [387286]     # Tamaño del DTB (ya lo usamos)
+BOOTCONFIG_SZ  [85]         # Tamaño del bootconfig (lo usaremos más adelante)
+PAGESIZE       [4096]       # ¡IMPORTANTE! Este es el valor para --pagesize
+NAME           []
+CMDLINE        [video=vfb:640x400,bpp=32,memsize=3072000 printk.devkmsg=on firmware_class.path=/vendor/firmware_mnt/image bootconfig]  # ¡IMPORTANTE! Este es el valor para BOARD_KERNEL_CMDLINE
+VND_RAMDISK    name=[] type=[platform] size=[12426849] fmt=[lz4_legacy]
+[boot/sign.rs:261] unexpected ASN.1 DER tag: expected SEQUENCE, got APPLICATION [1] (primitive)  # Error de firma (lo ignoramos por ahora)
+VBMETA

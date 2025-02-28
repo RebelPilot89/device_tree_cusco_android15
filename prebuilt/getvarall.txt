@@ -1,0 +1,97 @@
+PS C:\Users\marco> fastboot getvar all
+(bootloader) kernel: uefi
+(bootloader) version-bootloader[0]: MBM-3.0-cusco-bbb097e161d-241122-V1U
+(bootloader) version-bootloader[1]: U35H.15-41-7483a
+(bootloader) product: cusco
+(bootloader) board: cusco
+(bootloader) secure: yes
+(bootloader) lcs-state: SECURE_PROD_MODE
+(bootloader) hwrev: PVT
+(bootloader) radio: LATAM
+(bootloader) storage-type: UFS
+(bootloader) emmc: N/A
+(bootloader) ufs: 256GB MICRON MT256GAXAU4U2281 FV=0107 WB=2048
+(bootloader) ram: 8GB MICRON LP4x DIE=32Gb M5-M8=FF 07 00 18
+(bootloader) cpu: SM_NETRANI 1.0
+(bootloader) serialno: ZY22KC3M7H
+(bootloader) cid: 0x0032
+(bootloader) channelid: 0x2a
+(bootloader) uid: AF6C6FEA001DB0E1
+(bootloader) token: inactive
+(bootloader) securestate: flashing_unlocked
+(bootloader) factory-modes: disabled
+(bootloader) verity-state: enforcing (0)
+(bootloader) iswarrantyvoid: yes
+(bootloader) chipid: 0000043FAF6C6FEA
+(bootloader) max-download-size: 805306368
+(bootloader) reason: Volume down key pressed
+(bootloader) imei: 356305715825835
+(bootloader) imei2: 356305715825843
+(bootloader) esimid: 89033023423399010000020239231646
+(bootloader) meid:
+(bootloader) date: 08-09-2024
+(bootloader) sku: XT2429-1
+(bootloader) carrier_sku: XT2429-1
+(bootloader) battid: SB18E08901
+(bootloader) battery-voltage: 4362
+(bootloader) iccid:
+(bootloader) cust_md5:
+(bootloader) max-sparse-size: 268435456
+(bootloader) poweroffalarm: 0
+(bootloader) ro.carrier: altmx
+(bootloader) ro.build.fingerprint[0]: motorola/cusco_g/cusco:15/V1UU35H.
+(bootloader) ro.build.fingerprint[1]: 15-41/7483a-e511b1:user/release-ke
+(bootloader) ro.build.fingerprint[2]: ys
+(bootloader) ro.build.version.qcom[0]: AU_LINUX_ANDROID_LA.VENDOR.1.0.R1
+(bootloader) ro.build.version.qcom[1]: .11.00.00.816.246
+(bootloader) version-baseband[0]: M6450R_DE311_10.90.01.99R CUSCO_PVT_LA
+(bootloader) version-baseband[1]: TAMDSDS_CUST
+(bootloader) kernel.version[0]: Linux version 5.10.218-android12-9-00041
+(bootloader) kernel.version[1]: -g124993efd06e-ab12385094 (build-user@bu
+(bootloader) kernel.version[2]: ild-host) (Android (7284624, based on r4
+(bootloader) kernel.version[3]: 16183b) clang version 12.0.5 (https://an
+(bootloader) kernel.version[4]: droid.googlesource.com/toolchain/llvm-pr
+(bootloader) kernel.version[5]: oject c935d99d7cf2016289302412d708641d52
+(bootloader) kernel.version[6]: d2f7ee), LLD 12.0.5 (/buildbot/src/andro
+(bootloader) kernel.version[7]: id/llvm-toolchain/out/llvm-project/lld c
+(bootloader) kernel.version[8]: 935d99d7cf2016289302412d708641d52d2f7ee)
+(bootloader) kernel.version[9]: ) #1 SMP PREEMPT Mon Sep 16 20:00:18 UTC
+(bootloader) kernel.version[10]:  2024
+(bootloader) git:xbl_config: MBM-3.0-cusco-7b97baefb34-241122
+(bootloader) git:xbl_ramdump: MBM-3.0-cusco-7b97baefb34-241122
+(bootloader) git:uefi: MBM-3.0-cusco-7b97baefb34-241122
+(bootloader) git:abl[0]: MBM-3.0-cusco-bbb097e161d-241122-V1UU35H.15-41-
+(bootloader) git:abl[1]: 7483a
+(bootloader) git:aop: MBM-3.0-cusco-9cfcd09b2-241122
+(bootloader) git:aop_config: MBM-3.0-cusco-9cfcd09b2-241122
+(bootloader) git:tz: MBM-3.0-cusco-a33b27d23-241122
+(bootloader) git:hyp: MBM-3.0-cusco-a33b27d23-241122
+(bootloader) git:devcfg: MBM-3.0-cusco-a33b27d23-241122
+(bootloader) git:keymaster: MBM-3.0-cusco-fb965d86-241122
+(bootloader) git:storsec: MBM-3.0-cusco-fb965d86-241122
+(bootloader) git:uefisecapp: MBM-3.0-cusco-fb965d86-241122
+(bootloader) git:prov: MBM-3.0-cusco-a33b27d23-241122
+(bootloader) git:qupfw: MBM-3.0-cusco-372662a-241122
+(bootloader) git:cpucp: MBM-3.0-cusco-372662a-241122
+(bootloader) git:shrm: MBM-3.0-cusco-7b97baefb34-241122
+(bootloader) frp-state: no protection (1380)
+(bootloader) current-slot: a
+(bootloader) running-bl-slot: _a/_a
+(bootloader) running-boot-lun: 1
+(bootloader) slot-count: 2
+(bootloader) slot-successful:_a: yes
+(bootloader) slot-successful:_b: no
+(bootloader) slot-unbootable:_a: no
+(bootloader) slot-unbootable:_b: no
+(bootloader) slot-retry-count:_a: 6
+(bootloader) slot-retry-count:_b: 0
+(bootloader) logical-block-size: 0x1000
+(bootloader) erase-block-size: 0x1000
+(bootloader) is-userspace: no
+(bootloader) pcb-part-no: SB28E13066
+(bootloader) snapshot-update-status: none
+(bootloader) primary-display[0]: tm_vtdr6115_667_1080x2400_dsc_vid_120hz
+(bootloader) primary-display[1]: _fhd
+(bootloader) secondary-display: none
+(bootloader) fdr-allowed: yes
+all: listed above
